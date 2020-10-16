@@ -18,7 +18,12 @@ export function Content() {
         });
     }
     
-    
+    function getCurrentUser(){
+        React.useEffect(() => {
+            Socket.on('')
+        });
+        
+    }
     getNewMessages();
     
     
@@ -26,12 +31,7 @@ export function Content() {
     return (
         <div>
             <h1>Kash Messenger =)</h1>
-            <label>Enter your username/nickname
-                <input
-                    type="text"
-                    value={this.props.name}
-                />
-            </label>
+            <User />
                 <ol>
                     {messages.map((message, index) =>
                         <li key={index}>{message}</li>)}

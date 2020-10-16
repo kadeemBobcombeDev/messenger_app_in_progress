@@ -16,8 +16,8 @@ export function User(props) {
     
        return (
            <form onSubmit={handleSubmit}>
-                <span>You are logged in as: {props.name}</span>
-                <input id="message_input" placeholder="Enter your username/nickname"></input>
+                {/*<span>You are logged in as: {props.name}</span>*/}
+                <input id="user_input" placeholder="Enter your username/nickname"></input>
                 <button>Enter</button>
            </form>
         )
