@@ -8,6 +8,7 @@ import flask_socketio
 import models 
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
+USERS_JOINED_CHANNEL = 'users joined'
 
 app = flask.Flask(__name__)
 
@@ -30,15 +31,26 @@ db.create_all()
 db.session.commit()
 
 
+
 def emit_all_messages(channel):
     all_messages = [ \
         db_message.message for db_message \
-        in db.session.query(models.kashmessenger).all()]
+        in db.session.query(models.kashmessenger).all()
+        ]
         
     socketio.emit(channel, {
         'allMessages': all_messages
     })
+    
+def emit_current_user(channel):
+    current_user = []
+    #
 
+def emit_all_users(channel):
+    all_users = [ \
+        db_user.user for db_user \
+        in db.session.query(models.kashusers).all()
+        ]
 
 @socketio.on('connect')
 def on_connect():
@@ -64,8 +76,6 @@ def on_new_message(data):
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 @app.route('/')
-
-
 
 def index():
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
