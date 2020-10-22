@@ -5,10 +5,13 @@ import * as React from 'react';
 import { Button } from './Button';
 import { Socket } from './Socket';
 import { User } from './User';
+/*import { Supreme } from './supremebackground.jpg';*/
 
 export function Content() {
     const [messages, setMessages] = React.useState([]);
-    
+    const [] = React.useState([]);
+
+
     function getNewMessages() {
         React.useEffect(() => {
             Socket.on('messages received', (data) => {
@@ -18,25 +21,36 @@ export function Content() {
         });
     }
     
-    function getCurrentUser(){
+    function getNewUsers(){
         React.useEffect(() => {
-            Socket.on('')
+            Socket.on('users joined', (data) => {
+                console.log("Recieved users from server: " + data['allUsers']);
+                setMessages(data['allUsers']);
+            })
         });
         
     }
     getNewMessages();
+    /*getNewUsers();*/
     
     
          
     return (
-        <div>
-            <h1>Kash Messenger =)</h1>
-            <User />
-                <ol>
-                    {messages.map((message, index) =>
-                        <li key={index}>{message}</li>)}
-                </ol>
-            <Button />
+        <div style={{
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
+            <h1 style= {{ textAlign: "center" }}>Kash Messenger =)</h1>
+            
+                <div style={{overflow: 'auto', maxHeight: 200}}>
+                    <ol>
+                        {messages.map((message, index) =>
+                            <li key={index}>{message}</li>)}
+                    </ol>
+                </div>
+            <div style={{ textAlign: "center" }}>
+                <Button />
+            </div>
         </div>
     );
 }

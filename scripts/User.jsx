@@ -12,7 +12,7 @@ function handleSubmit(event) {
     
 }
 
-export function User(props) {
+export function User() {
     
        return (
            <form onSubmit={handleSubmit}>
@@ -20,5 +20,5 @@ export function User(props) {
                 <input id="user_input" placeholder="Enter your username/nickname"></input>
                 <button>Enter</button>
            </form>
-        )
+        );
 }

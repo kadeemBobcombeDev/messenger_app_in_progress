@@ -30,27 +30,35 @@ db.app = app
 db.create_all()
 db.session.commit()
 
+users=['milkdad','glizzygod','shakeman221']
+newuser=users[1]
 
+#print(socketio.sid)
 
 def emit_all_messages(channel):
     all_messages = [ \
         db_message.message for db_message \
-        in db.session.query(models.kashmessenger).all()
+        in db.session.query(models.Kashmessenger).all()
         ]
         
     socketio.emit(channel, {
         'allMessages': all_messages
     })
     
-def emit_current_user(channel):
-    current_user = []
+#def emit_current_user(channel):
     #
+
 
 def emit_all_users(channel):
     all_users = [ \
         db_user.user for db_user \
-        in db.session.query(models.kashusers).all()
+        in db.session.query(models.Kashusers).all()
         ]
+    
+    socketio.emit(channel, {
+        'allUsers': all_users
+    })
+    
 
 @socketio.on('connect')
 def on_connect():
@@ -60,6 +68,7 @@ def on_connect():
     })
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+    #emit_all_users(USERS_JOINED_CHANNEL)
     
 
 @socketio.on('disconnect')
@@ -70,15 +79,26 @@ def on_disconnect():
 def on_new_message(data):
     print("Got an event for a new message input with data:", data)
     
-    db.session.add(models.kashmessenger(data["message"]));
+    db.session.add(models.Kashmessenger(data["message"]));
+    #db.session.add(models.Kashmessenger(sender["user"]));
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
+@socketio.on('new user input')
+def on_new_user(data):
+    print("Got an even for a new USER input with data:", data)
+    db.session.add(models.Kashusers(data["user"]));
+    db.session.commit();
+    
+    #emit_all_users(USERS_JOINED_CHANNEL)
+    
 @app.route('/')
 
 def index():
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
+    emit_all_users(USERS_JOINED_CHANNEL)
+
     models.db.create_all()
 
     return flask.render_template("index.html")
