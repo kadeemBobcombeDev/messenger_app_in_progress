@@ -9,7 +9,7 @@ import { User } from './User';
 
 export function Content() {
     const [messages, setMessages] = React.useState([]);
-    const [] = React.useState([]);
+    const [users, setUsers] = React.useState([]);
 
 
     function getNewMessages() {
@@ -25,13 +25,13 @@ export function Content() {
         React.useEffect(() => {
             Socket.on('users joined', (data) => {
                 console.log("Recieved users from server: " + data['allUsers']);
-                setMessages(data['allUsers']);
+                setUsers(data['allUsers']);
             })
         });
         
     }
     getNewMessages();
-    /*getNewUsers();*/
+    getNewUsers();
     
     
          
@@ -48,8 +48,16 @@ export function Content() {
                             <li key={index}>{message}</li>)}
                     </ol>
                 </div>
+
             <div style={{ textAlign: "center" }}>
                 <Button />
+            </div>
+            <div style={{overflow: 'auto', maxHeight: 200}}>
+                <h2 style= {{ textAlign: "center" }}>Current Users</h2>
+                <ol>
+                    {users.map((user, index) =>
+                        <li key={index}>{user}</li>)}
+                </ol>
             </div>
         </div>
     );

@@ -68,7 +68,7 @@ def on_connect():
     })
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
-    #emit_all_users(USERS_JOINED_CHANNEL)
+    emit_all_users(USERS_JOINED_CHANNEL)
     
 
 @socketio.on('disconnect')
