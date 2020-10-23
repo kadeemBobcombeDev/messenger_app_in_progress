@@ -9,6 +9,7 @@ import models
 
 MESSAGES_RECEIVED_CHANNEL = 'messages received'
 USERS_JOINED_CHANNEL = 'users joined'
+AUTHU_JOINED_CHANNEL = 'authusers joined'
 
 app = flask.Flask(__name__)
 
@@ -30,10 +31,9 @@ db.app = app
 db.create_all()
 db.session.commit()
 
-users=['milkdad','glizzygod','shakeman221']
-newuser=users[1]
+#users=['milkdad','glizzygod','shakeman221']
+#newuser=users[1]
 
-#print(socketio.sid)
 
 def emit_all_messages(channel):
     all_messages = [ \
@@ -45,8 +45,16 @@ def emit_all_messages(channel):
         'allMessages': all_messages
     })
     
-#def emit_current_user(channel):
-    #
+
+def emit_all_auth_users(channel):
+    auth_users = [ \
+        db_authu.name for db_authu \
+        in db.session.query(models.AuthUser).all()
+        ]
+        
+    socketio.emit(channel, {
+        'allAuthU': auth_users
+    })
 
 
 def emit_all_users(channel):
@@ -59,7 +67,12 @@ def emit_all_users(channel):
         'allUsers': all_users
     })
     
-
+def push_new_user_to_db(name, auth_type):
+    if name != "John Doe":
+        db.session.add(models.AuthUser(name, auth_type));
+        db.session.commit()
+    
+    
 @socketio.on('connect')
 def on_connect():
     print('Someone connected!')
@@ -69,6 +82,7 @@ def on_connect():
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
     emit_all_users(USERS_JOINED_CHANNEL)
+    #emit_all_auth_users(AUTHU_JOINED_CHANNEL)
     
 
 @socketio.on('disconnect')
@@ -80,18 +94,24 @@ def on_new_message(data):
     print("Got an event for a new message input with data:", data)
     
     db.session.add(models.Kashmessenger(data["message"]));
-    #db.session.add(models.Kashmessenger(sender["user"]));
+    #db.session.add(models.Kashmessenger(data["user"]));
     db.session.commit();
     
     emit_all_messages(MESSAGES_RECEIVED_CHANNEL)
 
 @socketio.on('new user input')
 def on_new_user(data):
-    print("Got an even for a new USER input with data:", data)
+    print("Got an event for a new USER input with data:", data)
     db.session.add(models.Kashusers(data["user"]));
     db.session.commit();
     
     #emit_all_users(USERS_JOINED_CHANNEL)
+    
+@socketio.on('new google user')
+def on_new_google_user(data):
+    print("Got an event for a new google user input with data:", data)
+    push_new_user_to_db(data.name, models.AuthUserType.GOOGLE)
+    
     
 @app.route('/')
 

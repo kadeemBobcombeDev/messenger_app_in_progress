@@ -1,16 +1,14 @@
     
 import * as React from 'react';
-
-
 import { Button } from './Button';
 import { Socket } from './Socket';
 import { User } from './User';
-/*import { Supreme } from './supremebackground.jpg';*/
+import { GoogleButton } from './GoogleButton';
 
 export function Content() {
     const [messages, setMessages] = React.useState([]);
     const [users, setUsers] = React.useState([]);
-
+    const [authusers, setauthusers] = React.useState([]);
 
     function getNewMessages() {
         React.useEffect(() => {
@@ -30,8 +28,20 @@ export function Content() {
         });
         
     }
+    
+    function getNewAuthUsers(){
+        React.useEffect(() => {
+            Socket.on('authusers joined', (data) => {
+                console.log("Recieved users from server: " + data['allAuthU']);
+                setauthusers(data['allAuthU']);
+            })
+        });
+        
+    }
+    
     getNewMessages();
     getNewUsers();
+    getNewAuthUsers();
     
     
          
@@ -40,6 +50,7 @@ export function Content() {
             position: 'absolute', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)'
         }}>
+            <h1><GoogleButton /></h1>
             <h1 style= {{ textAlign: "center" }}>Kash Messenger =)</h1>
             
                 <div style={{overflow: 'auto', maxHeight: 200}}>
