@@ -120,7 +120,7 @@ def index():
     emit_all_users(USERS_JOINED_CHANNEL)
 
     models.db.create_all()
-
+    
     return flask.render_template("index.html")
 
 if __name__ == '__main__': 
