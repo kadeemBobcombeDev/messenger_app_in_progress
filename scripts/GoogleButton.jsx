@@ -6,7 +6,8 @@ import { GoogleLogin } from 'react-google-login';
  
 function handleSubmit(response) {
     console.log(response);
-    let name = "John Doe"
+    //let name = "John Doe"
+    let name = response.profileObj.name
     Socket.emit('new google user', {
         'name': name,
     });

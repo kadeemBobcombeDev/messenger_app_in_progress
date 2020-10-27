@@ -110,7 +110,7 @@ def on_new_user(data):
 @socketio.on('new google user')
 def on_new_google_user(data):
     print("Got an event for a new google user input with data:", data)
-    push_new_user_to_db(data.name, models.AuthUserType.GOOGLE)
+    push_new_user_to_db(data["name"], models.AuthUserType.GOOGLE)
     
     
 @app.route('/')
