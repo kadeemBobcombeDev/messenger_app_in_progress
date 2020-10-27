@@ -22,9 +22,9 @@ class Kashmessenger(db.Model):
     message = db.Column(db.String(120))
     sender = db.Column(db.String(20), db.ForeignKey('kashusers.id'))
 
-    def __init__(self, a): #add 'send' as an argument possibly
+    def __init__(self, a,sender): #add 'send' as an argument possibly
         self.message = a
-        #self.sender = send
+        self.sender = sender
 
     def __repr__(self):
         return '<Kashmessenger message : %s>' % self.message 
