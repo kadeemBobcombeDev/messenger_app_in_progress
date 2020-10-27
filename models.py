@@ -40,7 +40,7 @@ class AuthUser(db.Model):
     def __init__(self, name, auth_type):
         assert type(auth_type) is AuthUserType
         self.name = name
-        self.auth_type = auth_type
+        self.auth_type = auth_type.value
         
     def __repr__(self):
         return "<User name: {}\ntype: {}".format(self.name, self.auth_type)
