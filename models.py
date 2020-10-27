@@ -5,23 +5,22 @@ from enum import Enum
 
 
 class Kashusers(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(20), primary_key=True)
     user = db.Column(db.String(20))
-    #messages = db.relationship('Kashmessenger', backref='sender')
+    messages = db.relationship('Kashmessenger', backref='kashusers')
     
-    def __init__(self,b):
+    def __init__(self,b,c):
         self.user = b
+        self.id = c
         
     def __repr__(self):
-        return '<Kashuser user : %s>' %self.user
+        return '<Kashuser user : %s\nKashuser id : %s>' %(self.user, self.id)
         
         
 class Kashmessenger(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(120))
-    #sender = db.Column(db.String(120))
-    #sender= db.Column(db.String(120))
-    #sender = db.Column(db.String(20), db.ForeignKey('kashusers.id'))
+    sender = db.Column(db.String(20), db.ForeignKey('kashusers.id'))
 
     def __init__(self, a): #add 'send' as an argument possibly
         self.message = a
